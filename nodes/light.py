@@ -12,12 +12,19 @@ import os, sys
 import cv2
 import numpy as np
 from gopigo import *
-		
+
+import atexit
+
+def close_camera(camera):
+    camera.close()
 
 if __name__ == '__main__':
 
 	# Set camera parameters
 	camera = picamera.PiCamera()
+	
+	atexit.register(close_camera, camera) # close camera when program killed
+	
 	camera.resolution = (640,480)
 	camera.framerate = 24
 	camera.awb_mode = 'off'
@@ -32,13 +39,13 @@ if __name__ == '__main__':
 
 	### 
 
-for frame in camera.capture_continuous(rawCapture,format="bgr", use_video_port=True):
-	image = frame.array
-	# This sets up a constant stream of images of 24 fps.
-	# Write your image processing + publish here:
-	img_left = image[1:480,1:320]
-	img_right = image[1:480,321:640]
+    for frame in camera.capture_continuous(rawCapture,format="bgr", use_video_port=True):
+        image = frame.array
+        # This sets up a constant stream of images of 24 fps.
+        # Write your image processing + publish here:
+        img_left = image[1:480,1:320]
+        img_right = image[1:480,321:640]
 
 
-	rawCapture.truncate(0)
+        rawCapture.truncate(0)
 
